@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok LIVE Battle Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- HUD Overlay -->
+  <div id="hud">
+    <!-- Top Bar -->
+    <div id="top-bar">
+      <div id="red-team-info" class="team-info red">
+        <span class="team-name">🔴 RED TEAM</span>
+        <div class="hp-bar-container">
+          <div id="red-hp-bar" class="hp-bar red-bg"></div>
+          <span id="red-hp-text" class="hp-text">1000</span>
+        </div>
+        <span id="red-power" class="team-power">⚔️ 0</span>
+        <span id="red-members" class="team-members">👥 0</span>
+      </div>
+
+      <div id="center-info">
+        <div id="round-info">ROUND 1</div>
+        <div id="timer">⏱️ 2:00</div>
+        <div id="viewer-count">👁️ 0</div>
+        <div id="total-coins">💰 0 coins</div>
+      </div>
+
+      <div id="blue-team-info" class="team-info blue">
+        <span class="team-name">BLUE TEAM 🔵</span>
+        <div class="hp-bar-container">
+          <div id="blue-hp-bar" class="hp-bar blue-bg"></div>
+          <span id="blue-hp-text" class="hp-text">1000</span>
+        </div>
+        <span id="blue-power" class="team-power">⚔️ 0</span>
+        <span id="blue-members" class="team-members">👥 0</span>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard">
+      <div class="lb-title">🏆 TOP ARENA</div>
+      <div id="lb-list"></div>
+    </div>
+
+    <!-- Gift Feed -->
+    <div id="gift-feed"></div>
+
+    <!-- Join Instructions -->
+    <div id="instructions">
+      <div>💬 Comment <b>1</b> = Join 🔴 RED</div>
+      <div>💬 Comment <b>2</b> = Join 🔵 BLUE</div>
+      <div>🎁 Send gifts to power up!</div>
+    </div>
+
+    <!-- Battle Effects -->
+    <div id="battle-effects"></div>
+
+    <!-- Winner Announcement -->
+    <div id="winner-announcement" class="hidden">
+      <div id="winner-text"></div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
