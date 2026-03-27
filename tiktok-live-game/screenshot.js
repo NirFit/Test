@@ -8,9 +8,10 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
   // Take screenshots at different stages
   const shots = [
-    { wait: 10000, name: 'screenshot_1_start.png', label: 'Early game - players joining' },
-    { wait: 15000, name: 'screenshot_2_battle.png', label: 'Mid game - battle in progress' },
-    { wait: 20000, name: 'screenshot_3_intense.png', label: 'Late game - intense battle' },
+    { wait: 8000, name: 'screenshot_1_start.png', label: 'Players flooding in, gifts starting' },
+    { wait: 12000, name: 'screenshot_2_battle.png', label: 'Battle raging, money flowing' },
+    { wait: 15000, name: 'screenshot_3_intense.png', label: 'Intense battle, big donations' },
+    { wait: 15000, name: 'screenshot_4_climax.png', label: 'Climax - massive coins' },
   ];
 
   for (const shot of shots) {

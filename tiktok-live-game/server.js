@@ -203,55 +203,142 @@ function connectToTikTok() {
 
 // --- Demo Mode: simulate events for testing ---
 function startDemoMode() {
-  const demoNames = ['David', 'Sarah', 'Amit', 'Noa', 'Yossi', 'Maya', 'Omer', 'Shira', 'Eyal', 'Lior', 'Chen', 'Tal'];
-  const demoGifts = ['Rose', 'Heart Me', 'Perfume', 'Drama Queen', 'Lion', 'Gold Mine', 'Love You', 'Finger Heart'];
+  const demoNames = [
+    'xXDarkKnightXx', 'QueenBee_99', 'TikTokKing', 'NinjaStream',
+    'DiamondHands', 'CrazyGifter', 'BossLevel100', 'FireStorm',
+    'MoonWalker', 'StarDust', 'PixelWarrior', 'GoldRush',
+    'ThunderBolt', 'ShadowFox', 'CrystalQueen', 'IronFist',
+    'BlazeMaster', 'RocketMan', 'StormRider', 'PhoenixRise',
+    'LionKing23', 'DragonSlayer', 'MysticWolf', 'CosmicRay',
+    'VenomStrike', 'AcePlayer', 'WildCard', 'ProGamer99',
+    'SuperNova', 'TurboMax', 'UltraBoost', 'MegaStar',
+    'EpicFail_lol', 'BigSpender', 'GiftMonster', 'LegendX',
+    'RichKid2026', 'BattleQueen', 'WarMachine', 'TopDonator',
+  ];
+  const smallGifts = ['Rose', 'GG', 'Ice Cream Cone', 'Finger Heart', 'Heart Me', 'Doughnut', 'Team Bracelet'];
+  const mediumGifts = ['Perfume', 'Cap', 'Love You', 'Hand Hearts', 'Gold Mine'];
+  const bigGifts = ['Drama Queen', 'Lion', 'Planet', 'Rocket'];
+  const ultraGifts = ['Universe', 'TikTok Universe'];
+
   let idCounter = 1000;
+  const knownUsers = {};
 
   function randomUser() {
+    // 70% chance to reuse existing user, 30% new user
+    const existingIds = Object.keys(knownUsers);
+    if (existingIds.length > 5 && Math.random() < 0.7) {
+      const id = existingIds[Math.floor(Math.random() * existingIds.length)];
+      return knownUsers[id];
+    }
     const name = demoNames[Math.floor(Math.random() * demoNames.length)];
-    return {
-      id: String(idCounter++),
-      name,
-      uniqueId: name.toLowerCase(),
-      avatar: null,
-    };
+    const id = String(idCounter++);
+    const user = { id, name, uniqueId: name.toLowerCase(), avatar: null };
+    knownUsers[id] = user;
+    return user;
   }
 
-  // Auto-join teams
-  setInterval(() => {
-    const user = randomUser();
-    const team = Math.random() > 0.5 ? 'red' : 'blue';
-    broadcast({ type: 'joinTeam', user, team });
-  }, 3000);
+  // Rapid player joins at start
+  let joinBurst = 0;
+  const joinTimer = setInterval(() => {
+    const batchSize = joinBurst < 10 ? 3 : 1; // Fast joins at start
+    for (let i = 0; i < batchSize; i++) {
+      const user = randomUser();
+      const team = Math.random() > 0.5 ? 'red' : 'blue';
+      broadcast({ type: 'joinTeam', user, team });
+    }
+    joinBurst++;
+  }, 800);
 
-  // Auto-send gifts
+  // Constant small gifts (every 400ms)
   setInterval(() => {
     const user = randomUser();
-    const giftName = demoGifts[Math.floor(Math.random() * demoGifts.length)];
+    const giftName = smallGifts[Math.floor(Math.random() * smallGifts.length)];
     const giftAction = getGiftAction(giftName, 1);
-    const repeatCount = Math.floor(Math.random() * 5) + 1;
-
+    const repeatCount = Math.floor(Math.random() * 10) + 1;
     broadcast({
-      type: 'gift',
-      user,
+      type: 'gift', user,
       gift: {
-        name: giftAction.name,
-        icon: giftAction.icon,
-        action: giftAction.action,
-        power: giftAction.power * repeatCount,
-        count: repeatCount,
+        name: giftAction.name, icon: giftAction.icon, action: giftAction.action,
+        power: giftAction.power * repeatCount, count: repeatCount,
         coins: (giftAction.coins || 1) * repeatCount,
       },
     });
-  }, 2000);
+  }, 400);
 
-  // Auto-likes
+  // Medium gifts (every 1.5s)
   setInterval(() => {
     const user = randomUser();
-    broadcast({ type: 'like', user, count: Math.floor(Math.random() * 20) + 1 });
+    const giftName = mediumGifts[Math.floor(Math.random() * mediumGifts.length)];
+    const giftAction = getGiftAction(giftName, 1);
+    const repeatCount = Math.floor(Math.random() * 8) + 1;
+    broadcast({
+      type: 'gift', user,
+      gift: {
+        name: giftAction.name, icon: giftAction.icon, action: giftAction.action,
+        power: giftAction.power * repeatCount, count: repeatCount,
+        coins: (giftAction.coins || 1) * repeatCount,
+      },
+    });
   }, 1500);
 
-  broadcast({ type: 'connected', roomId: 'DEMO', viewers: 150 });
+  // Big gifts (every 3s)
+  setInterval(() => {
+    const user = randomUser();
+    const giftName = bigGifts[Math.floor(Math.random() * bigGifts.length)];
+    const giftAction = getGiftAction(giftName, 1);
+    const repeatCount = Math.floor(Math.random() * 3) + 1;
+    broadcast({
+      type: 'gift', user,
+      gift: {
+        name: giftAction.name, icon: giftAction.icon, action: giftAction.action,
+        power: giftAction.power * repeatCount, count: repeatCount,
+        coins: (giftAction.coins || 1) * repeatCount,
+      },
+    });
+  }, 3000);
+
+  // Ultra gifts - whale donations (every 8s)
+  setInterval(() => {
+    const user = randomUser();
+    const giftName = ultraGifts[Math.floor(Math.random() * ultraGifts.length)];
+    const giftAction = getGiftAction(giftName, 1);
+    const repeatCount = Math.floor(Math.random() * 3) + 1;
+    broadcast({
+      type: 'gift', user,
+      gift: {
+        name: giftAction.name, icon: giftAction.icon, action: giftAction.action,
+        power: giftAction.power * repeatCount, count: repeatCount,
+        coins: (giftAction.coins || 1) * repeatCount,
+      },
+    });
+  }, 8000);
+
+  // Likes storm
+  setInterval(() => {
+    const user = randomUser();
+    broadcast({ type: 'like', user, count: Math.floor(Math.random() * 100) + 10 });
+  }, 500);
+
+  // Follows
+  setInterval(() => {
+    const user = randomUser();
+    broadcast({ type: 'follow', user });
+  }, 4000);
+
+  // Shares
+  setInterval(() => {
+    const user = randomUser();
+    broadcast({ type: 'share', user });
+  }, 5000);
+
+  // Rising viewer count
+  let viewers = 847;
+  setInterval(() => {
+    viewers += Math.floor(Math.random() * 50) + 5;
+    broadcast({ type: 'viewers', count: viewers });
+  }, 3000);
+
+  broadcast({ type: 'connected', roomId: 'DEMO-WHALE', viewers });
 }
 
 // --- Start Server ---
